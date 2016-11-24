@@ -24,11 +24,11 @@ class getSmarty
      */
     public static function get ($compile, $cache = null)
     {
-        if (ENV == 'dev') {
-            require_once ('smarty/libs/Smarty.class.php');
-        } else {
-            require_once ('smarty3/libs/Smarty.class.php');
-        }
+//        if (ENV == 'dev') {
+//            require_once ('smarty/libs/Smarty.class.php');
+//        } else {
+//            require_once ('smarty3/libs/Smarty.class.php');
+//        }
 
         self::$instance = new Smarty();
 
@@ -88,7 +88,7 @@ class getSmarty
 
             return $tpl;
         } else {
-            return /*$smarty_obj->template_dir .*/ 'common/404.tpl';
+            return $smarty_obj->template_dir[0] . 'common/404.tpl';
         }
 
     }
