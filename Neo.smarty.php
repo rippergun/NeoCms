@@ -54,11 +54,6 @@ class getSmarty
 
         self::$instance->default_template_handler_func = array('getSmarty', 'templateFallback');
 
-        if (defined('ENV') && ENV == 'dev' && defined('ENV_DEBUG') && ENV_DEBUG === true) {
-            self::$instance->debugging = 1;
-            self::$instance->debug_tpl = 'file:' . PATH_TEMPLATE_BACK . '/_profiler/debug.tpl';
-        }
-
         return self::$instance;
     }
 
