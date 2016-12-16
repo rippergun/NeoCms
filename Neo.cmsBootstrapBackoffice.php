@@ -18,7 +18,7 @@ if (isset($client['client_path']) && !empty($client['client_path'])) {
     unset($client, $key, $value);
 } else {
     echo 'no such site<hr>';
-    if ($_SERVER['REMOTE_ADDR'] == $_SERVER['LOCAL_ADDR']) {
+    if ($_SERVER['REMOTE_ADDR'] == $_SERVER['SERVER_ADDR']) {
         echo 'admin mode<hr>';
         require('install/install.php');
     }
