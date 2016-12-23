@@ -5,21 +5,21 @@ setlocale(LC_ALL, 'fr_FR');
 if (isset($_SERVER['SERVER_NAME']))
 {
 	session_start();
-} else {
-	$_SERVER['SERVER_NAME'] = 'localhost';
 }
 
-switch ($_SERVER['SERVER_NAME'])
+$_serverName = strtolower(php_uname('n'));
+
+switch ($_serverName)
 {
-	case 'ds9':
+	case 'neoweb':
 		define('PATH_ROOT', '/home/projects/cms_services');
 		define('SITE_URL', 'http://services.neonovis.lan');
 		define('DATABASE_NAME', 'cms_services');		//
 		define('DATABASE_USER', 'root');		//
 		define('DATABASE_PASSWD', 'fa5stuir');		//
 		//define ('SMTP_SERVER', 'smtp.free.fr');
+        define('TLD', '.lan');
 		break;
-	case 'neonovis.com' :
 	default :
 		define('PATH_ROOT', '/home/projects/cms_services');
 		define('SITE_URL', 'http://services.neonovis.com');
@@ -27,6 +27,7 @@ switch ($_SERVER['SERVER_NAME'])
 		define('DATABASE_USER', 'root');		//
 		define('DATABASE_PASSWD', 'fa5stuir');		//
 		//define ('SMTP_SERVER', '127.0.0.1');
+        define('TLD', '.com');
 		break;
 
 }
@@ -53,13 +54,13 @@ define('URL_TO_REPUPLOAD', 			SITE_URL.'/'.FOLDER_REPUPLOAD.'/');
 //define('FRONT_URL_IMAGES', 		SITE_URL.'/images/');
 //define('FRONT_PATH_IMAGES', 		PATH_SITE.'/images/');
 
-define('BACK_URL_IMAGES', 		'http://static.neonovis.com/neocms.backoffice.img/');
-define('BACK_URL_JS', 		'http://static.neonovis.com/neocms.js/');
-define('BACK_URL_CSS', 		'http://static.neonovis.com/neocms.backoffice.css/');
+define('BACK_URL_IMAGES', 		'http://static.neonovis'.TLD.'/images/');
+define('BACK_URL_JS', 		'http://static.neonovis'.TLD.'/js/');
+define('BACK_URL_CSS', 		'http://static.neonovis'.TLD.'/css/backoffice/');
 
 define('PATH_INCLUDE', 			PATH_ROOT.'/'.'include');
-define('PATH_CACHE', 				'C:/webs/_smarty/cache/cms_services/');
-define('PATH_COMPILE', 			'C:/webs/_smarty/compile/cms_services/');
+define('PATH_CACHE', '/tmp/smarty/cache/cms_services/');
+define('PATH_COMPILE', '/tmp/smarty/compile/cms_services/');
 //define('BACK_URL_IMAGES', 'http://www.neonovis.com/cms/images/');
 
 //$b_dev = true;
