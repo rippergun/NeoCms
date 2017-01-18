@@ -1,7 +1,7 @@
 <?php
 require ('Neo.environnement.php');
 require ('Neo.clientRouteur.php');
-require_once ('Neo.connect.php');
+//require_once ('Neo.connect.php');
 
 $controleur = new NeoClientRouteur();
 $client     = $controleur->checkUrl();

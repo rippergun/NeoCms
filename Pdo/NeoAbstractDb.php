@@ -1,7 +1,7 @@
 <?php
-Namespace NeoDb\Pdo;
+Namespace NeoCms\Pdo;
 
-class NeoAbstractDB
+class NeoAbstractDb
 {
     /**
      * @var \PDO
@@ -231,7 +231,7 @@ class NeoAbstractDB
    /* public final function __destruct()
     {
         if ($this->debug) {
-            echo '<div id="debug">' . count($this->log) . ' requêtes SQL en ' . number_format($this->mtime, 2) . '<ul>';
+            echo '<div id="debug">' . count($this->log) . ' requï¿½tes SQL en ' . number_format($this->mtime, 2) . '<ul>';
             foreach ($this->log as $log) {
                 echo "<li>$log</li>";
             }

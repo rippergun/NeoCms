@@ -1,5 +1,5 @@
 <?php
-Namespace rippergun\NeoCms;
+Namespace NeoCms;
 /**
  *
  * @todo tofix ne convient que pour CMS_services et cms_php.
