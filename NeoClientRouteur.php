@@ -1,4 +1,5 @@
 <?php
+namespace NeoCms;
 /**
  * @package mvc
  * charge la conf du client depuis Neoconf

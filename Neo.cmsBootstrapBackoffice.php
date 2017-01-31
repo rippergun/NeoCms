@@ -4,8 +4,8 @@ session_start();
 setlocale(LC_ALL, 'fr_FR');
 
 require_once ('Neo.environnement.php');
-require_once ('Neo.clientRouteur.php');
-require_once ('Neo.connect.php');
+require_once('NeoClientRouteur.php');
+//require_once ('Neo.connect.php');
 
 $controleur = new NeoClientRouteur();
 $client = $controleur->checkUrl();

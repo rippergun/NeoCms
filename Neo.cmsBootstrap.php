@@ -1,9 +1,9 @@
 <?php
 require ('Neo.environnement.php');
-require ('Neo.clientRouteur.php');
-//require_once ('Neo.connect.php');
+//require('NeoClientRouteur.php');
+////require_once ('Neo.connect.php');
 
-$controleur = new NeoClientRouteur();
+$controleur = new NeoCms\NeoClientRouteur();
 $client     = $controleur->checkUrl();
 
 if (isset($client['client_path']) && !empty($client['client_path'])) {
