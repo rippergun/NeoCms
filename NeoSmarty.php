@@ -53,7 +53,7 @@ class NeoSmarty
         self::$instance->use_sub_dirs         = false;
         self::$instance->debugging        = defined('DEBUG_SMARTY') ? DEBUG_SMARTY : false;
 
-        self::$instance->default_template_handler_func = array('getSmarty', 'templateFallback');
+        self::$instance->default_template_handler_func = array('\\NeoCms\\NeoSmarty', 'templateFallback');
 
         return self::$instance;
     }
