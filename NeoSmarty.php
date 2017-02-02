@@ -72,6 +72,14 @@ class NeoSmarty
         }
     }
 
+    /**
+     * @param $resource_type
+     * @param $resource_name
+     * @param $template_source
+     * @param $template_timestamp
+     * @param $smarty_obj
+     * @return mixed|string
+     */
     public static function templateFallback ($resource_type, $resource_name, &$template_source, &$template_timestamp, $smarty_obj)
     {
         if (strpos($resource_name, '_mobi')) {
