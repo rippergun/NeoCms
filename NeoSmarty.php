@@ -25,12 +25,6 @@ class NeoSmarty
      */
     public static function get ($compile, $cache = null)
     {
-//        if (ENV == 'dev') {
-//            require_once ('smarty/libs/Smarty.class.php');
-//        } else {
-//            require_once ('smarty3/libs/Smarty.class.php');
-//        }
-
         self::$instance = new \Smarty();
 
         // Set default workdirs
