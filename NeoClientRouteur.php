@@ -42,6 +42,7 @@ class NeoClientRouteur
      */
     public final function loadConf()
     {
+        //@todo a passer en json
         if (($handle = fopen(PATH_CONF . "neocms.php", "r")) !== false) {
             $i       = 0;
             $clients = array();
