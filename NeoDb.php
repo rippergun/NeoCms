@@ -14,7 +14,7 @@ class NeoDb
 
     /**
      * @param null $params
-     * @return mixed \NeoCms\NeoDb\Pdo\NeoAbstractDB
+     * @return \NeoCms\Pdo\NeoAbstractDB
      * @throws \Exception
      */
     public function getDB($params = null)
