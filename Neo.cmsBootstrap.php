@@ -18,6 +18,4 @@ if (isset($client['client_path']) && !empty($client['client_path'])) {
     }*/
     exit;
 }
-
-require('classes/core.constantes.php');
 ?>

@@ -1,11 +1,12 @@
 <?php
+Namespace rippergun\NeoCms;
 /**
  *
- * @deprecated ne convient que pour CMS_services et cms_php.
+ * @todo tofix ne convient que pour CMS_services et cms_php.
  * @author RiPPeR
  *
  */
-class getSmarty
+class NeoSmarty
 {
     /**
      * cr�e une instance smarty
@@ -20,7 +21,7 @@ class getSmarty
     /**
      * @param $compile
      * @param null $cache
-     * @return Smarty
+     * @return \Smarty
      */
     public static function get ($compile, $cache = null)
     {
@@ -30,7 +31,7 @@ class getSmarty
 //            require_once ('smarty3/libs/Smarty.class.php');
 //        }
 
-        self::$instance = new Smarty();
+        self::$instance = new \Smarty();
 
         // Set default workdirs
         self::$instance->cache_dir    = PATH_CACHE;
