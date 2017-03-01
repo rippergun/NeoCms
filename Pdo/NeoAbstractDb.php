@@ -109,7 +109,7 @@ class NeoAbstractDb
             $mtime = microtime(true);
         }
 
-        if(!isset($this->cnx[$this->connectionName]) || get_class($this->cnx[$this->connectionName]) != '\\NeoCms\\NeoDb\\Pdo\\NeoAbstractDB' ) {
+        if(!isset($this->cnx[$this->connectionName]) || get_class($this->cnx[$this->connectionName]) != 'NeoDb\\Pdo\\NeoAbstractDB' ) {
             $connected = $this->_getConnection($this->connectionParams[$this->connectionName], $this->connectionName);
         } else {
             $connected = true;
@@ -182,7 +182,7 @@ class NeoAbstractDb
         if (isset($this->cnx[$this->connectionName])) {
 
             //vide le registre
-            \NeoCms\NeoDb::resetDB($this->connectionName);
+            \NeoDB::resetDB($this->connectionName);
 
             // coupe la connexion facon pdo
             $this->cnx[$this->connectionName] = null;

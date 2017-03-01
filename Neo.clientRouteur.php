@@ -1,5 +1,4 @@
 <?php
-namespace NeoCms;
 /**
  * @package mvc
  * charge la conf du client depuis Neoconf
@@ -77,49 +76,20 @@ class NeoClientRouteur
         return false;
     }
 
-    /**
-     * charge la conf depuis le fichier de conf neocms.php
-     */
-    public final function loadConfJson()
-    {
-        if (file_exists(PATH_CONF . "neocms.json") !== false) {
-            $i       = 0;
-            $clients = array();
-
-            $_clients = json_decode(file_get_contents(PATH_CONF . "neocms.json"));
-
-            foreach ($_clients as $id => $cli) {
-                $cli->client_id = $id;
-                $clients[$cli->client_url] = (array) $cli;
-            }
-
-            $this->_setCache($clients);
-            return $clients;
-        }
-    }
-
-    private final function _checkConfUrlJson($client_url)
-    {
-        if ($this->clients == null && !$this->clients = $this->_getCache('clients')) {
-            $this->clients = $this->loadConf();
-        }
-
-        if (isset($this->clients[$client_url])) {
-            return (array) $this->clients[$client_url];
-        }
-
-        return false;
-    }
-
     private final function _setCache($clients)
     {
         //@todo linux
-        return false;
+        if (extension_loaded('wincache')) {
+            wincache_ucache_set('clients', $clients);
+        }
     }
 
     private final function _getCache($key)
     {
         //@todo linux
+        if (extension_loaded('wincache')) {
+            return wincache_ucache_get($key);
+        }
         return false;
     }
 }
