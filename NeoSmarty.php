@@ -6,50 +6,26 @@ Namespace NeoCms;
  * @author RiPPeR
  *
  */
-class NeoSmarty
+class NeoSmarty extends \Smarty
 {
-    /**
-     * cr�e une instance smarty
-     *
-     * @param  string $sompile
-     * @param bool $cache
-     * @return object
-     */
-
-    private static $instance;
-
     /**
      * @param $compile
      * @param null $cache
      * @return \Smarty
      */
-    public static function get ($compile, $cache = null)
+    public function __construct ($cache = null)
     {
-        self::$instance = new \Smarty();
-
-        // Set default workdirs
-        self::$instance->cache_dir    = PATH_CACHE;
-        self::$instance->compile_dir  = PATH_COMPILE;
-        self::$instance->template_dir = PATH_TEMPLATE;
-        self::$instance->config_dir = PATH_CONFIG;
+        parent::__construct();
 
         if (!is_null($cache)) {
-            self::$instance->caching = $cache;
+            $this->caching = $cache;
         } else {
-            self::$instance->caching = CACHE;
+            $this->caching = CACHE;
         }
 
-        self::$instance->cache_id = self::makeCacheId();
+        $this->cache_id = self::makeCacheId();
+        $this->default_template_handler_func = array('\\NeoCms\\NeoSmarty', 'templateFallback');
 
-        self::$instance->compile_check        = true;
-        self::$instance->force_compile        = false;
-        self::$instance->cache_modified_check = false;
-        self::$instance->use_sub_dirs         = false;
-        self::$instance->debugging        = defined('DEBUG_SMARTY') ? DEBUG_SMARTY : false;
-
-        self::$instance->default_template_handler_func = array('\\NeoCms\\NeoSmarty', 'templateFallback');
-
-        return self::$instance;
     }
 
     /**
