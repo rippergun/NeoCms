@@ -9,9 +9,8 @@ Namespace NeoCms;
 class NeoSmarty extends \Smarty
 {
     /**
-     * @param $compile
+     * NeoSmarty constructor.
      * @param null $cache
-     * @return \Smarty
      */
     public function __construct ($cache = null)
     {
@@ -29,7 +28,7 @@ class NeoSmarty extends \Smarty
     }
 
     /**
-     * cr�e un identifiant de cache en fonction de l'url
+     * crée un identifiant de cache en fonction de l'url
      *
      * @return string
      */
@@ -66,7 +65,6 @@ class NeoSmarty extends \Smarty
         }
 
     }
-
 }
 
 ?>
