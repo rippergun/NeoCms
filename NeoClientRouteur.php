@@ -19,12 +19,12 @@ class NeoClientRouteur
         if (php_sapi_name() == 'cli') {
 
             if (isset($_SERVER['argv'][1])) {
-                return $this->_checkConfUrl($_SERVER['argv'][1]);
+                return $this->checkConfUrl($_SERVER['argv'][1]);
             } else {
                 return false;
             }
         } else {
-            return $this->_checkConfUrl($_SERVER['HTTP_HOST']);
+            return $this->checkConfUrl($_SERVER['HTTP_HOST']);
         }
     }
 
@@ -34,39 +34,29 @@ class NeoClientRouteur
      */
     public final function checkClientName($client_url)
     {
-        return $this->_checkConfUrl($client_url);
+        return $this->checkConfUrl($client_url);
     }
 
-    /**
+      /**
      * charge la conf depuis le fichier de conf neocms.php
      */
-    public final function loadConf()
+    public final function loadConfJson()
     {
-        //@todo a passer en json
-        if (($handle = fopen(PATH_CONF . "neocms.php", "r")) !== false) {
-            $i       = 0;
+        if (file_exists(PATH_CONF . "neocms.json") !== false) {
             $clients = array();
-            while (($data = fgetcsv($handle, 1000, ";")) !== false) {
-                if ($i == 0) {
-                    $champs = $data;
-                } else {
-                    foreach ($champs as $key => $champ) {
-                        $tmp[$champ] = $data[$key];
-                    }
-                    $clients[] = $tmp;
-                }
-                $i++;
+            $_clients = json_decode(file_get_contents(PATH_CONF . "neocms.json"));
+            foreach ($_clients as $id => $cli) {
+                $cli->client_id = $id;
+                $clients[$cli->client_url] = (array) $cli;
             }
-            fclose($handle);
-            $this->_setCache($clients);
             return $clients;
         }
     }
 
-    private final function _checkConfUrl($client_url)
+    private final function checkConfUrl($client_url)
     {
-        if ($this->clients == null && !$this->clients = $this->_getCache('clients')) {
-            $this->clients = $this->loadConf();
+        if ($this->clients == null) {
+            $this->clients = $this->loadConfJson();
         }
 
         foreach ($this->clients as $client) {
@@ -75,23 +65,6 @@ class NeoClientRouteur
             }
         }
 
-        return false;
-    }
-
-    private final function _setCache($clients)
-    {
-        //@todo linux
-        if (extension_loaded('wincache')) {
-            wincache_ucache_set('clients', $clients);
-        }
-    }
-
-    private final function _getCache($key)
-    {
-        //@todo linux
-        if (extension_loaded('wincache')) {
-            return wincache_ucache_get($key);
-        }
         return false;
     }
 }
