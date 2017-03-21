@@ -48,6 +48,7 @@ class NeoDb
 
     static function resetDB($connectionName)
     {
+       // require_once('Zend/Registry.php');
         $registry = \Zend_Registry::getInstance();
         $registry->set(strtoupper($connectionName), false);
     }
