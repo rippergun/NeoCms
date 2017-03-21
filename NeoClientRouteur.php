@@ -15,6 +15,7 @@ class NeoClientRouteur
     public $clients = null;
 
     /**
+     * @todo à externaliser, environnementaliser (export PATHCONF=/home/projects/NeoConf/ ??)
      * @var string
      */
     private $pathConf = '/home/projects/NeoConf/';
