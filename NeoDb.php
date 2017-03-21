@@ -36,15 +36,10 @@ class NeoDb
                     $params['charset'] = null; // 'UTF-8';
                 }
             }
-//            if (defined('MYSQL_DRIVER') && MYSQL_DRIVER == 'PDO') {
                 $cnx = new Pdo\NeoAbstractDb($params, $this->connectionName);
-//            } else {
-//                $cnx = new \NeoDb\Mysqli\NeoAbstractDB($params, $this->connectionName);
-//            }
 
             $this->registry->set(strtoupper($this->connectionName), $cnx);
         } else {
-            //echo "using registry $this->connectionName \n";
             $cnx = $this->registry[strtoupper($this->connectionName)];
         }
 
@@ -53,7 +48,6 @@ class NeoDb
 
     static function resetDB($connectionName)
     {
-       // require_once('Zend/Registry.php');
         $registry = \Zend_Registry::getInstance();
         $registry->set(strtoupper($connectionName), false);
     }
