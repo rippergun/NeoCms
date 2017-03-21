@@ -1,5 +1,8 @@
 <?php
 namespace NeoCms;
+
+use Symfony\Component\Config\Definition\Exception\Exception;
+
 /**
  * @package mvc
  * charge la conf du client depuis Neoconf
@@ -10,6 +13,18 @@ namespace NeoCms;
 class NeoClientRouteur
 {
     public $clients = null;
+
+    /**
+     * @var string
+     */
+    private $pathConf = '/home/projects/NeoConf/';
+
+    public function __construct($pathConf = null)
+    {
+        if (!is_null($pathConf)) {
+            $this->pathConf = $pathConf;
+        }
+    }
 
     /**
      * renvoit les infos client selon le HOST
@@ -42,15 +57,16 @@ class NeoClientRouteur
      */
     public final function loadConfJson()
     {
-        if (file_exists(PATH_CONF . "neocms.json") !== false) {
+        if (file_exists($this->pathConf . "neocms.json") !== false) {
             $clients = array();
-            $_clients = json_decode(file_get_contents(PATH_CONF . "neocms.json"));
+            $_clients = json_decode(file_get_contents($this->pathConf . "neocms.json"));
             foreach ($_clients as $id => $cli) {
                 $cli->client_id = $id;
                 $clients[$cli->client_url] = (array) $cli;
             }
             return $clients;
         }
+        throw new Exception("Unable to load client list from " . $this->pathConf . "neocms.json");
     }
 
     private final function checkConfUrl($client_url)
