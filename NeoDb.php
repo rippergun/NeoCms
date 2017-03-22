@@ -24,10 +24,10 @@ class NeoDb
         }
 
         if (!isset($this->registry[strtoupper($this->connectionName)]) || $this->registry[strtoupper($this->connectionName)] === false) {
-            $params['host'] = isset($params['host']) ? $params['host'] : DATABASE_HOST;
-            $params['username'] = isset($params['username']) ? $params['username'] : DATABASE_USER;
-            $params['password'] = isset($params['password']) ? $params['password'] : DATABASE_PASSWD;
-            $params['dbname'] = isset($params['dbname']) ? $params['dbname'] : DATABASE_NAME;
+//            $params['host'] = isset($params['host']) ? $params['host'] : DATABASE_HOST;
+//            $params['username'] = isset($params['username']) ? $params['username'] : DATABASE_USER;
+//            $params['password'] = isset($params['password']) ? $params['password'] : DATABASE_PASSWD;
+//            $params['dbname'] = isset($params['dbname']) ? $params['dbname'] : DATABASE_NAME;
 
             if (!isset($params['charset'])) {
                 if (defined('DATABASE_CHARSET')) {
