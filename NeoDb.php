@@ -6,10 +6,29 @@ class NeoDb
     protected $connectionName;
     protected $registry;
 
-    public function __construct($connectionName)
+    /**
+     * @var \DataCollector\Logger
+     */
+    protected $logger;
+
+    /**
+     * NeoDb constructor.
+     * @param $connectionName
+     * @param \DataCollector\Logger $logger
+     */
+    public function __construct($connectionName, $logger)
     {
         $this->connectionName = strtoupper($connectionName);
         $this->registry = \Zend_Registry::getInstance();
+        $this->setLogger($logger);
+    }
+
+    /**
+     * @param \DataCollector\Logger $logger
+     */
+    public function setLogger($logger)
+    {
+        $this->logger = $logger;
     }
 
     /**
@@ -36,7 +55,8 @@ class NeoDb
                     $params['charset'] = null; // 'UTF-8';
                 }
             }
-                $cnx = new Pdo\NeoAbstractDb($params, $this->connectionName);
+
+            $cnx = new Pdo\NeoAbstractDb($params, $this->connectionName, $this->logger);
 
             $this->registry->set(strtoupper($this->connectionName), $cnx);
         } else {

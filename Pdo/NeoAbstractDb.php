@@ -1,52 +1,71 @@
 <?php
-Namespace NeoCms\Pdo;
+namespace NeoCms\Pdo;
 
 class NeoAbstractDb
 {
     /**
      * @var \PDO
      */
-    protected $cnx = array();
+    protected $cnx = [];
 
     protected $connectionName;
 
-    protected $log = array();
+    protected $log = [];
 
     protected $debug = false;
 
     protected $mtime = 0;
 
-    protected $connectionParams = array();
+    protected $connectionParams = [];
 
-    public function __construct($params, $connectionName)
+    /**
+     * @var \DataCollector\Logger
+     */
+    protected $logger;
+
+    public function __construct($params, $connectionName, $logger)
     {
         if (defined('DEBUG_DB') && DEBUG_DB == true) {
             $this->debug = true;
         }
 
+        $this->setLogger($logger);
+
         $this->connectionParams[$connectionName] = $params;
-        $this->connectionName             = $connectionName;
+        $this->connectionName                    = $connectionName;
+
         return $this;
         //return $this->_getConnection($params, $connectionName);
     }
 
-    private final function _getConnection($params, $connectionName)
+    /**
+     * @param \DataCollector\Logger $logger
+     */
+    public function setLogger($logger)
     {
-        $this->connectionName             = $connectionName;
+        $this->logger = $logger;
+    }
+
+    private final function getConnection($params, $connectionName)
+    {
+        $this->connectionName = $connectionName;
         try {
-            $this->cnx[$this->connectionName] = @new \PDO("mysql:host={$params['host']};dbname={$params['dbname']}",
+            $this->cnx[$this->connectionName] = @new \PDO(
+                "mysql:host={$params['host']};dbname={$params['dbname']}",
                 $params['username'],
                 $params['password'],
-                array(\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION ));
+                [\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION]
+            );
         } catch (\PdoException $e) {
             trigger_error($e->getMessage(), E_USER_WARNING);
             \httpError::error503();
+
             return false;
         }
 
         // charset
         if (!is_null($params['charset'])) {
-            $this->cnx[$this->connectionName]->query('SET NAMES ' . $params['charset']);
+            $this->cnx[$this->connectionName]->query('SET NAMES '.$params['charset']);
         } else {
             $this->cnx[$this->connectionName]->query('SET NAMES Latin1');
         }
@@ -67,6 +86,7 @@ class NeoAbstractDb
     {
         $handle = $this->query($sql);
         $result = $handle->fetchAll(\PDO::FETCH_ASSOC);
+
         return !empty($result) ? $result : null;
     }
 
@@ -74,6 +94,7 @@ class NeoAbstractDb
     {
         $handle = $this->query($sql);
         $result = $handle->fetch(\PDO::FETCH_NUM);
+
         return isset($result[0]) ? $result[0] : null;
     }
 
@@ -91,6 +112,7 @@ class NeoAbstractDb
         if (!is_null($handle)) {
             $result = $handle->fetch(\PDO::FETCH_ASSOC);
         }
+
         return !empty($result) ? $result : null;
     }
 
@@ -109,8 +131,8 @@ class NeoAbstractDb
             $mtime = microtime(true);
         }
 
-        if(!isset($this->cnx[$this->connectionName]) || get_class($this->cnx[$this->connectionName]) != '\\NeoCms\\NeoDb\\Pdo\\NeoAbstractDB' ) {
-            $connected = $this->_getConnection($this->connectionParams[$this->connectionName], $this->connectionName);
+        if (!isset($this->cnx[$this->connectionName]) || get_class($this->cnx[$this->connectionName]) != '\\NeoCms\\NeoDb\\Pdo\\NeoAbstractDB') {
+            $connected = $this->getConnection($this->connectionParams[$this->connectionName], $this->connectionName);
         } else {
             $connected = true;
         }
@@ -119,7 +141,7 @@ class NeoAbstractDb
             try {
                 $result = $this->cnx[$this->connectionName]->query($sql);
             } catch (\PDOException $e) {
-                trigger_error($e->getMessage() . "\n" . $e->getTraceAsString(), E_USER_WARNING);
+                trigger_error($e->getMessage()."\n".$e->getTraceAsString(), E_USER_WARNING);
             }
         } else {
             $result = null;
@@ -129,8 +151,8 @@ class NeoAbstractDb
             $mtime = microtime(true) - $mtime;
             $this->mtime += $mtime;
             $this->log[] = [
-                'time' => $mtime,
-                'link' => $this->cnx[$this->connectionName]->getAttribute(\PDO::ATTR_CONNECTION_STATUS),
+                'time'  => $mtime,
+                'link'  => $this->cnx[$this->connectionName]->getAttribute(\PDO::ATTR_CONNECTION_STATUS),
                 'query' => $sql,
             ];
 
@@ -144,6 +166,7 @@ class NeoAbstractDb
 
             }
         }*/
+
         return isset($result) && $result !== false ? $result : null;
     }
 
@@ -151,10 +174,11 @@ class NeoAbstractDb
      * @param $sql
      * @return \PDOStatement
      */
-    public function prepare($sql) {
+    public function prepare($sql)
+    {
 
-        if(!isset($this->cnx[$this->connectionName]) || get_class($this->cnx[$this->connectionName]) != 'mysqli' ) {
-            $connected = $this->_getConnection($this->connectionParams[$this->connectionName], $this->connectionName);
+        if (!isset($this->cnx[$this->connectionName]) || get_class($this->cnx[$this->connectionName]) != 'mysqli') {
+            $connected = $this->getConnection($this->connectionParams[$this->connectionName], $this->connectionName);
         } else {
             $connected = true;
         }
@@ -163,17 +187,19 @@ class NeoAbstractDb
             try {
                 $result = $this->cnx[$this->connectionName]->prepare($sql);
             } catch (\PDOException $e) {
-                trigger_error($e->getMessage() . "\n" . $e->getTraceAsString(), E_USER_WARNING);
+                trigger_error($e->getMessage()."\n".$e->getTraceAsString(), E_USER_WARNING);
             }
         } else {
             $result = false;
         }
+
         return $result;
     }
 
     public function lastInsertId()
     {
         $id = $this->cnx[$this->connectionName]->lastInsertId();
+
         return isset($id) ? $id : 0;
     }
 
@@ -199,17 +225,17 @@ class NeoAbstractDb
     public function escapeString($string)
     {
         return $string;
-      // return $this->quote($string);
+        // return $this->quote($string);
     }
 
     /**
      * @param $string
      * @return mixed
      */
-    public function quote ($string)
+    public function quote($string)
     {
-        if(!isset($this->cnx[$this->connectionName]) || get_class($this->cnx[$this->connectionName]) != 'mysqli' ) {
-            $this->_getConnection($this->connectionParams[$this->connectionName], $this->connectionName);
+        if (!isset($this->cnx[$this->connectionName]) || get_class($this->cnx[$this->connectionName]) != 'mysqli') {
+            $this->getConnection($this->connectionParams[$this->connectionName], $this->connectionName);
         }
 
         return $this->cnx[$this->connectionName]->quote($string);
@@ -221,37 +247,28 @@ class NeoAbstractDb
         return $handle->rowCount();
     }
 
-    public function print_query($sql,$placeholders){
-        foreach($placeholders as $k => $v){
-            $sql = preg_replace('/:'.$k.'/',"'".$v."'",$sql);
+    public function print_query($sql, $placeholders)
+    {
+        foreach ($placeholders as $k => $v) {
+            $sql = preg_replace('/:'.$k.'/', "'".$v."'", $sql);
         }
+
         return $sql;
     }
-
-   /* public final function __destruct()
-    {
-        if ($this->debug) {
-            echo '<div id="debug">' . count($this->log) . ' requ�tes SQL en ' . number_format($this->mtime, 2) . '<ul>';
-            foreach ($this->log as $log) {
-                echo "<li>$log</li>";
-            }
-            echo '</ul></div>';
-        }
-    }*/
 
     public function destruct()
     {
         if (defined('ENV') && ENV == 'dev' && defined('ENV_DEBUG') && ENV_DEBUG === true) {
             if (!empty($this->debug)) {
-                \DataCollector\Logger::getInstance()->log('total', count($this->log), 'Db');
-                \DataCollector\Logger::getInstance()->log(
+                $this->logger->log('total', count($this->log), 'Db');
+                $this->logger->log(
                     'time',
                     $this->mtime,
                     'Db'
                 );
 
                 foreach ($this->log as $k => $d) {
-                    \DataCollector\Logger::getInstance()->log($k, $d, 'Db');
+                    $this->logger->log($k, $d, 'Db');
                 }
             }
             $this->log = [];
