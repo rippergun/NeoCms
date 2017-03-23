@@ -1,4 +1,5 @@
 <?php
+//@todo à bouger sans cms_services en tant que conf
 ob_start();
 setlocale(LC_ALL, 'fr_FR');
 
