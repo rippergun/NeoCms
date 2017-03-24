@@ -15,7 +15,7 @@ class NeoClientRouteur
     public $clients = null;
 
     /**
-     * @todo à externaliser, environnementaliser (export PATHCONF=/home/projects/NeoConf/ ??)
+     * @todo ï¿½ externaliser, environnementaliser (export PATHCONF=/home/projects/NeoConf/ ??)
      * @var string
      */
     private $pathConf = '/home/projects/NeoConf/';
@@ -81,8 +81,8 @@ class NeoClientRouteur
                 return $client;
             }
         }
-
-        return false;
+        throw new  \Exception("Client config not found for : $client_url");
+        //return false;
     }
 }
 
