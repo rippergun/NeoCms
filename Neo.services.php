@@ -9,23 +9,27 @@ if (isset($_SERVER['SERVER_NAME']))
 	$_SERVER['SERVER_NAME'] = 'localhost';
 }
 
-switch ($_SERVER['SERVER_NAME'])
+switch (gethostname())
 {
-	case 'ds9':
+	case 'neoweb':
 		define('PATH_ROOT', '/home/projects/cms_services');
 		define('SITE_URL', 'http://services.neonovis.lan');
+        define('DATABASE_HOST', 'neomysql');
 		define('DATABASE_NAME', 'cms_services');		//
 		define('DATABASE_USER', 'root');		//
-		define('DATABASE_PASSWD', 'fa5stuir');		//
+		define('DATABASE_PASSWD', 'mypass');		//
+        define('MYSQL_DRIVER', 'PDO');
 		//define ('SMTP_SERVER', 'smtp.free.fr');
 		break;
 	case 'neonovis.com' :
 	default :
 		define('PATH_ROOT', '/home/projects/cms_services');
 		define('SITE_URL', 'http://services.neonovis.com');
+        define('DATABASE_HOST', '127.0.0.1');
 		define('DATABASE_NAME', 'cms_services');		//
 		define('DATABASE_USER', 'root');		//
 		define('DATABASE_PASSWD', 'fa5stuir');		//
+        define('MYSQL_DRIVER', 'PDO');
 		//define ('SMTP_SERVER', '127.0.0.1');
 		break;
 
@@ -58,8 +62,8 @@ define('BACK_URL_JS', 		'http://static.neonovis.com/neocms.js/');
 define('BACK_URL_CSS', 		'http://static.neonovis.com/neocms.backoffice.css/');
 
 define('PATH_INCLUDE', 			PATH_ROOT.'/'.'include');
-define('PATH_CACHE', 				'C:/webs/_smarty/cache/cms_services/');
-define('PATH_COMPILE', 			'C:/webs/_smarty/compile/cms_services/');
+define('PATH_CACHE', 				'/tmp/smarty/cache/cms_services/');
+define('PATH_COMPILE', 			'/tmp/smarty/compile/cms_services/');
 //define('BACK_URL_IMAGES', 'http://www.neonovis.com/cms/images/');
 
 //$b_dev = true;
