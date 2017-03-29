@@ -258,7 +258,7 @@ class NeoAbstractDb
 
     public function destruct()
     {
-        if (defined('ENV') && ENV == 'dev' && defined('ENV_DEBUG') && ENV_DEBUG === true) {
+        if (defined('ENV') && ENV == 'dev' && defined('DEBUG') && DEBUG === true) {
             if (!empty($this->debug)) {
                 $this->logger->log('total', count($this->log), 'Db');
                 $this->logger->log(
