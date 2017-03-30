@@ -11,16 +11,20 @@ class NeoDb
      */
     protected $logger;
 
+    protected $debug;
+
     /**
      * NeoDb constructor.
      * @param $connectionName
      * @param \DataCollector\Logger $logger
+     * @param bool $debug
      */
-    public function __construct($connectionName, $logger)
+    public function __construct($connectionName, $logger, $debug = false)
     {
         $this->connectionName = strtoupper($connectionName);
         $this->registry = \Zend_Registry::getInstance();
         $this->setLogger($logger);
+        $this->debug = $debug;
     }
 
     /**
@@ -43,10 +47,6 @@ class NeoDb
         }
 
         if (!isset($this->registry[strtoupper($this->connectionName)]) || $this->registry[strtoupper($this->connectionName)] === false) {
-//            $params['host'] = isset($params['host']) ? $params['host'] : DATABASE_HOST;
-//            $params['username'] = isset($params['username']) ? $params['username'] : DATABASE_USER;
-//            $params['password'] = isset($params['password']) ? $params['password'] : DATABASE_PASSWD;
-//            $params['dbname'] = isset($params['dbname']) ? $params['dbname'] : DATABASE_NAME;
 
             if (!isset($params['charset'])) {
                 if (defined('DATABASE_CHARSET')) {
@@ -56,7 +56,7 @@ class NeoDb
                 }
             }
 
-            $cnx = new Pdo\NeoAbstractDb($params, $this->connectionName, $this->logger);
+            $cnx = new Pdo\NeoAbstractDb($params, $this->connectionName, $this->logger, $this->debug);
 
             $this->registry->set(strtoupper($this->connectionName), $cnx);
         } else {
@@ -68,7 +68,6 @@ class NeoDb
 
     static function resetDB($connectionName)
     {
-       // require_once('Zend/Registry.php');
         $registry = \Zend_Registry::getInstance();
         $registry->set(strtoupper($connectionName), false);
     }

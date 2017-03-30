@@ -23,11 +23,9 @@ class NeoAbstractDb
      */
     protected $logger;
 
-    public function __construct($params, $connectionName, $logger)
+    public function __construct($params, $connectionName, $logger, $debug = false)
     {
-        if (defined('DEBUG_DB') && DEBUG_DB == true) {
-            $this->debug = true;
-        }
+        $this->debug = true;
 
         $this->setLogger($logger);
 
@@ -44,6 +42,14 @@ class NeoAbstractDb
     public function setLogger($logger)
     {
         $this->logger = $logger;
+    }
+
+    /**
+     * @param bool $debug
+     */
+    public function setDebug($debug)
+    {
+        $this->debug = $debug;
     }
 
     private final function getConnection($params, $connectionName)
@@ -131,7 +137,8 @@ class NeoAbstractDb
             $mtime = microtime(true);
         }
 
-        if (!isset($this->cnx[$this->connectionName]) || get_class($this->cnx[$this->connectionName]) != '\\NeoCms\\NeoDb\\Pdo\\NeoAbstractDB') {
+        if (!isset($this->cnx[$this->connectionName]) || get_class($this->cnx[$this->connectionName]) != self::class
+            /*'\\NeoCms\\NeoDb\\Pdo\\NeoAbstractDB'*/) {
             $connected = $this->getConnection($this->connectionParams[$this->connectionName], $this->connectionName);
         } else {
             $connected = true;
@@ -158,15 +165,6 @@ class NeoAbstractDb
 
         }
 
-        /*if (!$result) {
-            try {
-                throw new \Exception($this->cnx[$this->connectionName]->error . '<br>' . $sql);
-            } catch (\Exception $e) {
-                trigger_error($e->getMessage() . "\n" . $e->getTraceAsString(), E_USER_WARNING);
-
-            }
-        }*/
-
         return isset($result) && $result !== false ? $result : null;
     }
 
@@ -188,12 +186,11 @@ class NeoAbstractDb
                 $result = $this->cnx[$this->connectionName]->prepare($sql);
             } catch (\PDOException $e) {
                 trigger_error($e->getMessage()."\n".$e->getTraceAsString(), E_USER_WARNING);
+                return false;
             }
-        } else {
-            $result = false;
+            return $result;
         }
-
-        return $result;
+        return false;
     }
 
     public function lastInsertId()
@@ -258,18 +255,16 @@ class NeoAbstractDb
 
     public function destruct()
     {
-        if (defined('ENV') && ENV == 'dev' && defined('DEBUG') && DEBUG === true) {
-            if (!empty($this->debug)) {
-                $this->logger->log('total', count($this->log), 'Db');
-                $this->logger->log(
-                    'time',
-                    $this->mtime,
-                    'Db'
-                );
+        if ($this->debug === true) {
+            $this->logger->log('total', count($this->log), 'Db');
+            $this->logger->log(
+                'time',
+                $this->mtime,
+                'Db'
+            );
 
-                foreach ($this->log as $k => $d) {
-                    $this->logger->log($k, $d, 'Db');
-                }
+            foreach ($this->log as $k => $d) {
+                $this->logger->log($k, $d, 'Db');
             }
             $this->log = [];
         }
