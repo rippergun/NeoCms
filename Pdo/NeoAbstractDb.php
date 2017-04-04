@@ -174,6 +174,9 @@ class NeoAbstractDb
      */
     public function prepare($sql)
     {
+        if ($this->debug) {
+            $mtime = microtime(true);
+        }
 
         if (!isset($this->cnx[$this->connectionName]) || get_class($this->cnx[$this->connectionName]) != 'mysqli') {
             $connected = $this->getConnection($this->connectionParams[$this->connectionName], $this->connectionName);
@@ -184,6 +187,17 @@ class NeoAbstractDb
         if ($connected) {
             try {
                 $result = $this->cnx[$this->connectionName]->prepare($sql);
+
+                if ($this->debug) {
+                    $mtime = microtime(true) - $mtime;
+                    $this->mtime += $mtime;
+                    $this->log[] = [
+                        'time'  => $mtime,
+                        'link'  => $this->cnx[$this->connectionName]->getAttribute(\PDO::ATTR_CONNECTION_STATUS),
+                        'query' => $sql,
+                    ];
+
+                }
             } catch (\PDOException $e) {
                 trigger_error($e->getMessage()."\n".$e->getTraceAsString(), E_USER_WARNING);
                 return false;
