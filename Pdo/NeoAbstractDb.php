@@ -64,6 +64,8 @@ class NeoAbstractDb
             );
         } catch (\PdoException $e) {
             trigger_error($e->getMessage(), E_USER_WARNING);
+
+            //@todo remove
             \httpError::error503();
 
             return false;
@@ -137,7 +139,7 @@ class NeoAbstractDb
             $mtime = microtime(true);
         }
 
-        if (!isset($this->cnx[$this->connectionName]) || get_class($this->cnx[$this->connectionName]) != self::class
+        if (!isset($this->cnx[$this->connectionName]) || get_class($this->cnx[$this->connectionName]) != 'PDO'
             /*'\\NeoCms\\NeoDb\\Pdo\\NeoAbstractDB'*/) {
             $connected = $this->getConnection($this->connectionParams[$this->connectionName], $this->connectionName);
         } else {
@@ -178,7 +180,7 @@ class NeoAbstractDb
             $mtime = microtime(true);
         }
 
-        if (!isset($this->cnx[$this->connectionName]) || get_class($this->cnx[$this->connectionName]) != 'mysqli') {
+        if (!isset($this->cnx[$this->connectionName]) || get_class($this->cnx[$this->connectionName]) != 'PDO') {
             $connected = $this->getConnection($this->connectionParams[$this->connectionName], $this->connectionName);
         } else {
             $connected = true;
@@ -245,7 +247,7 @@ class NeoAbstractDb
      */
     public function quote($string)
     {
-        if (!isset($this->cnx[$this->connectionName]) || get_class($this->cnx[$this->connectionName]) != 'mysqli') {
+        if (!isset($this->cnx[$this->connectionName]) || get_class($this->cnx[$this->connectionName]) != 'PDO') {
             $this->getConnection($this->connectionParams[$this->connectionName], $this->connectionName);
         }
 
