@@ -1,21 +1,46 @@
 <?php
 Namespace NeoCms;
 
+use NeoCms\Pdo\NeoAbstractDb;
+
 class NeoDb
 {
     protected $connectionName;
     protected $registry;
 
-    public function __construct($connectionName)
+    /**
+     * @var \DataCollector\Logger
+     */
+    protected $logger;
+
+    protected $debug;
+
+    /**
+     * NeoDb constructor.
+     * @param $connectionName
+     * @param \DataCollector\Logger $logger
+     * @param bool $debug
+     */
+    public function __construct($connectionName, $logger, $debug = false)
     {
         $this->connectionName = strtoupper($connectionName);
         $this->registry = \Zend_Registry::getInstance();
+        $this->setLogger($logger);
+        $this->debug = $debug;
+    }
+
+    /**
+     * @param \DataCollector\Logger $logger
+     */
+    public function setLogger($logger)
+    {
+        $this->logger = $logger;
     }
 
     /**
      * @param null $params
-     * @return mixed|\NeoDb\Mysqli\NeoAbstractDB|\NeoDb\Pdo\NeoAbstractDB
-     * @throws Exception
+     * @return \NeoCms\Pdo\NeoAbstractDB
+     * @throws \Exception
      */
     public function getDB($params = null)
     {
@@ -24,10 +49,6 @@ class NeoDb
         }
 
         if (!isset($this->registry[strtoupper($this->connectionName)]) || $this->registry[strtoupper($this->connectionName)] === false) {
-            $params['host'] = isset($params['host']) ? $params['host'] : DATABASE_HOST;
-            $params['username'] = isset($params['username']) ? $params['username'] : DATABASE_USER;
-            $params['password'] = isset($params['password']) ? $params['password'] : DATABASE_PASSWD;
-            $params['dbname'] = isset($params['dbname']) ? $params['dbname'] : DATABASE_NAME;
 
             if (!isset($params['charset'])) {
                 if (defined('DATABASE_CHARSET')) {
@@ -36,15 +57,11 @@ class NeoDb
                     $params['charset'] = null; // 'UTF-8';
                 }
             }
-//            if (defined('MYSQL_DRIVER') && MYSQL_DRIVER == 'PDO') {
-                $cnx = new Pdo\NeoAbstractDb($params, $this->connectionName);
-//            } else {
-//                $cnx = new \NeoDb\Mysqli\NeoAbstractDB($params, $this->connectionName);
-//            }
+
+            $cnx = new Pdo\NeoAbstractDb($params, $this->connectionName, $this->logger, $this->debug);
 
             $this->registry->set(strtoupper($this->connectionName), $cnx);
         } else {
-            //echo "using registry $this->connectionName \n";
             $cnx = $this->registry[strtoupper($this->connectionName)];
         }
 
@@ -53,7 +70,6 @@ class NeoDb
 
     static function resetDB($connectionName)
     {
-       // require_once('Zend/Registry.php');
         $registry = \Zend_Registry::getInstance();
         $registry->set(strtoupper($connectionName), false);
     }
